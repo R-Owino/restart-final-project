@@ -44,4 +44,7 @@ The application has been divided into 2 parts:
 </p>
 </p>
 
+### Further work
+- Implement a mobile alert system that gets alerts from an installed camera.
 
+#### References
