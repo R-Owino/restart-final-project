@@ -1,15 +1,15 @@
+import React from 'react';
 import { useState } from "react";
-import "/assets/Sample_User_Icon";
 import { v4 as uuidv4 } from "uuid";
 import "./App.css";
-
 
 function App() {
     const [image, setImage] = useState("");
     const [uploadResultMessage, setuploadeResultMessage] = useState(
         "Please upload an image to verify"
     );
-    const [visitorName, setvisitorName] = useState("Sample_User_Icon.png");
+    const [visitorName, setvisitorName] = useState("Sample_User_Icon.jpg");
+    const [isAuth, setAuth] = useState("false");
 
     function sendImage(e) {
         e.preventDefault();
@@ -18,38 +18,74 @@ function App() {
 
         // call the API gateway to upload the images to S3
         fetch(
-            `https://i02s3xa1wk.execute-api.us-west-2.amazonaws.com/dev/visitorsphotobucket/${visitorImageName}.png`,
+            `https://i02s3xa1wk.execute-api.us-west-2.amazonaws.com/dev/visitorsphotobucket/${visitorImageName}.jpg`,
             {
                 method: "PUT",
                 headers: {
-                    "Content-Type": "/image/png",
+                    "Content-Type": "/image/jpg",
                 },
                 body: image,
             }
-        ).then(async () => {
-            const response = await verify(visitorImageName);
-            if (response.Message === "Success") {
+        )
+            .then(async (response) => {
+                if (response.status === 200) {
+                    const verifyResponse = await verify(visitorImageName);
+                    setAuth("true");
+                    setuploadeResultMessage(
+                        `Hey ${verifyResponse["firstName"]}, brace yourself for the ultimate comfort zone! Shoes off, stretchy pants on, and get ready for some grade-A hospitality and maybe a dad joke or two.`
+                    );
+                } else {
+                    setAuth(false);
+                    setuploadeResultMessage(
+                        "Authentication failed, Remmy doesn't know you."
+                    );
+                }
+            })
+            .catch((error) => {
+                setAuth(false);
                 setuploadeResultMessage(
-                    `Hey ${response["firstName"]}, brace yourself for the ultimate comfort zone! Shoes off, stretchy pants on, and get ready for some grade-A hospitality and maybe a dad joke or two.`
+                    "Looks like there is an error verifying you. Are you sure you're at the right place 👀"
                 );
-            }
-        });
+                console.error(error);
+            });
+    }
+
+    async function verify(visitorImageName) {
+        const requestUrl =
+            "https://i02s3xa1wk.execute-api.us-west-2.amazonaws.com/dev/friends?" +
+            new URLSearchParams({
+                objectKey: `${visitorImageName}.jpg`,
+            });
+        return await fetch(requestUrl, {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                return data;
+            })
+            .catch((error) => console.error(error));
     }
 
     return (
         <div className="App">
-            <h2>Welcome to Remmy's Home 🛖</h2>
+            <h2>Remmy's Home 🛖</h2>
             <form onSubmit={sendImage}>
                 <input
                     type="file"
                     name="image"
-                    onChange={(e) => setTarget(e.target.files[0])}
+                    onChange={(e) => setImage(e.target.files[0])}
                 ></input>
                 <button type="submit">Validate</button>
             </form>
 
             {/* Image upload success or fail message */}
-            <div>{uploadResultMessage}</div>
+            <div className={isAuth ? "success" : "failure"}>
+                {uploadResultMessage}
+            </div>
             <img
                 src={require(`./visitors/${visitorName}`)}
                 alt="Visitor"
