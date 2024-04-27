@@ -1,6 +1,6 @@
-import React from 'react';
-import { useState } from "react";
+import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import backgroundImage from "./assets/background.jpg";
 import "./App.css";
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
     const [uploadResultMessage, setuploadeResultMessage] = useState(
         "Please upload an image to verify"
     );
-    const [visitorName, setvisitorName] = useState("Sample_User_Icon.jpg");
+    const [visitorName, setvisitorName] = useState("Sample_User_Icon.png");
     const [isAuth, setAuth] = useState("false");
 
     function sendImage(e) {
@@ -18,7 +18,7 @@ function App() {
 
         // call the API gateway to upload the images to S3
         fetch(
-            `https://i02s3xa1wk.execute-api.us-west-2.amazonaws.com/dev/visitorsphotobucket/${visitorImageName}.jpg`,
+            `https://i02s3xa1wk.execute-api.us-west-2.amazonaws.com/dev/visitorsphotosbucket/${visitorImageName}.jpg`,
             {
                 method: "PUT",
                 headers: {
@@ -52,7 +52,7 @@ function App() {
 
     async function verify(visitorImageName) {
         const requestUrl =
-            "https://i02s3xa1wk.execute-api.us-west-2.amazonaws.com/dev/friends?" +
+            "https://i02s3xa1wk.execute-api.us-west-2.amazonaws.com/dev/my_friends?" +
             new URLSearchParams({
                 objectKey: `${visitorImageName}.jpg`,
             });
@@ -73,15 +73,21 @@ function App() {
     return (
         <div className="App">
             <h2>Remmy's Home 🛖</h2>
-            <form onSubmit={sendImage}>
-                <input
-                    type="file"
-                    name="image"
-                    onChange={(e) => setImage(e.target.files[0])}
-                ></input>
-                <button type="submit">Validate</button>
-            </form>
-
+            <div className="background-image-container">
+                <img
+                    src={backgroundImage}
+                    alt="Background"
+                    className="background-image"
+                />
+                <form onSubmit={sendImage} className="form-container">
+                    <input
+                        type="file"
+                        name="image"
+                        onChange={(e) => setImage(e.target.files[0])}
+                    ></input>
+                    <button type="submit">Validate</button>
+                </form>
+            </div>
             {/* Image upload success or fail message */}
             <div className={isAuth ? "success" : "failure"}>
                 {uploadResultMessage}
