@@ -1,6 +1,17 @@
 .App {
-  text-align: center;
+  text-align: justify;
   margin: 1.5rem;
+}
+
+.h2 {
+  padding: 1rem;
+  font-size: larger;
+}
+
+.background-image {
+  width: 75%;
+  height: 75%;
+  object-fit: cover;
 }
 
 .success {
