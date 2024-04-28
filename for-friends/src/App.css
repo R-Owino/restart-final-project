@@ -1,11 +1,31 @@
 .App {
   text-align: justify;
-  margin: 1.5rem;
+  width: 100%;
+  height: 100vh;
 }
 
-.h2 {
+.header {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.logo {
+  width: 50px;
+  margin-right: 10px;
+  margin-left: 2rem;
+}
+
+h2 {
   padding: 1rem;
   font-size: larger;
+  margin-left: 2rem;
+}
+
+.content {
+  position: relative;
+  display: flex;
+  
 }
 
 .background-image {
@@ -14,12 +34,32 @@
   object-fit: cover;
 }
 
-.success {
+.form-container {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: justify-content;
+  align-items: flex-start;
+  padding: 2rem;
+}
+
+.form-container button {
+  flex: 0 0 auto; /* The button does not grow and takes its natural width */
+}
+
+.success,
+.failure {
+  position: absolute;
+  right: 0;
+  left: 0;
   padding: 1rem;
+  text-align: center; /* Center the text */
+}
+
+.success {
   color: green;
 }
 
 .failure {
-  padding: 1rem;
   color: red;
 }
