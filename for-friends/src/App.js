@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import backgroundImage from "./assets/background.jpg";
+import logo from "./assets/logo.png";
 import "./App.css";
 
 function App() {
@@ -72,8 +73,11 @@ function App() {
 
     return (
         <div className="App">
-            <h2>Remmy's Home 🛖</h2>
-            <div className="background-image-container">
+            <div className="header">
+                <img src={logo} alt="Logo" className="logo" />
+                <h2>Karibu Nyumbani 🛖</h2>
+            </div>
+            <div className="content">
                 <img
                     src={backgroundImage}
                     alt="Background"
@@ -87,10 +91,10 @@ function App() {
                     ></input>
                     <button type="submit">Validate</button>
                 </form>
-            </div>
-            {/* Image upload success or fail message */}
-            <div className={isAuth ? "success" : "failure"}>
-                {uploadResultMessage}
+                {/* Image upload success or fail message */}
+                <div className= {isAuth ? "success" : "failure"}>
+                    {uploadResultMessage}
+                </div>
             </div>
             <img
                 src={require(`./visitors/${visitorName}`)}
