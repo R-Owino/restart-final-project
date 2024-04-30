@@ -74,7 +74,6 @@ function App() {
     return (
         <div className="App">
             <div className="header">
-                <img src={logo} alt="Logo" className="logo" />
                 <h2>Karibu Nyumbani 🛖</h2>
             </div>
             <div className="content">
