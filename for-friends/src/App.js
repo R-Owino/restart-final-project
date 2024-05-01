@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import backgroundImage from "./assets/background.jpg";
-import logo from "./assets/logo.png";
 import "./App.css";
 
 function App() {
@@ -19,11 +18,11 @@ function App() {
 
         // call the API gateway to upload the images to S3
         fetch(
-            `https://i02s3xa1wk.execute-api.us-west-2.amazonaws.com/dev/visitorsphotosbucket/${visitorImageName}.jpg`,
+            `https://i02s3xa1wk.execute-api.us-west-2.amazonaws.com/dev/visitorsphotosbucket/${visitorImageName}.*`,
             {
                 method: "PUT",
                 headers: {
-                    "Content-Type": "/image/jpg",
+                    "Content-Type": "image/*",
                 },
                 body: image,
             }
@@ -33,7 +32,7 @@ function App() {
                     const verifyResponse = await verify(visitorImageName);
                     setAuth("true");
                     setuploadeResultMessage(
-                        `Hey ${verifyResponse["firstName"]}, brace yourself for the ultimate comfort zone! Shoes off, stretchy pants on, and get ready for some grade-A hospitality and maybe a dad joke or two.`
+                        `Hey ${verifyResponse["firstName"]}. Welcome to Remmy's Home!`
                     );
                 } else {
                     setAuth(false);
@@ -45,7 +44,7 @@ function App() {
             .catch((error) => {
                 setAuth(false);
                 setuploadeResultMessage(
-                    "Looks like there is an error verifying you. Are you sure you're at the right place 👀"
+                    "There was an error verifying you. Are you sure you're at the right place 👀"
                 );
                 console.error(error);
             });
@@ -55,7 +54,7 @@ function App() {
         const requestUrl =
             "https://i02s3xa1wk.execute-api.us-west-2.amazonaws.com/dev/my_friends?" +
             new URLSearchParams({
-                objectKey: `${visitorImageName}.jpg`,
+                objectKey: `${visitorImageName}.*`,
             });
         return await fetch(requestUrl, {
             method: "GET",
